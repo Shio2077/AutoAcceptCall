@@ -1,0 +1,1 @@
+pyinstaller --noconfirm --clean --onefile --windowed --add-data "img;img" --hidden-import=pywintypes --hidden-import=win32timezone --name AutoAcceptCall src\main.py
