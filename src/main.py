@@ -3,7 +3,7 @@ import numpy as np
 import cv2
 import sys, time, ctypes
 import win32api
-import os, sys
+import os
 import mss
 
 THRESHOLD = 0.9
@@ -15,11 +15,22 @@ try:
 except Exception:
     pass
 
+
+def resource_path(rel_path: str) -> str:
+    # Support PyInstaller onefile extraction via sys._MEIPASS
+    if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
+        base_path = sys._MEIPASS
+    else:
+        base_path = os.path.dirname(os.path.abspath(__file__))
+    return os.path.join(base_path, rel_path)
+
 def load_res():
-    call_pic = cv2.imread("img/call.png")
-    video_pic = cv2.imread("img/video.png")
+    call_path = resource_path(os.path.join('img', 'call.png'))
+    video_path = resource_path(os.path.join('img', 'video.png'))
+    call_pic = cv2.imread(call_path)
+    video_pic = cv2.imread(video_path)
     if call_pic is None or video_pic is None:
-        raise FileNotFoundError("img not found")
+        raise FileNotFoundError(f"img not found: {call_path}, {video_path}")
     return call_pic, video_pic
 
 def find_on_monitor(img_bgr, template_bgr, threshold=THRESHOLD):
